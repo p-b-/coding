@@ -5,30 +5,35 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 )
 
-// https://www.hackerrank.com/challenges/repeated-string
+// https://www.hackerrank.com/challenges/jumping-on-the-clouds
 
-func runTest(wordToRepeat string, n uint64, log bool) uint64 {
-	lenOfWord := uint64(len(wordToRepeat))
-	countOfA := uint64(strings.Count(wordToRepeat, "a"))
+func runTest(clouds []int, log bool) int {
+	steps := 0
 
-	completeRepeats := n / lenOfWord
-	if log {
-		fmt.Printf("Complete repeats %d\n", completeRepeats)
+	cloudCount := len(clouds)
+	lastCloud := cloudCount - 1
+	pos := 0
+
+	for pos < lastCloud {
+		if pos+1 == lastCloud {
+			pos++
+			steps++
+		} else if pos+2 == lastCloud {
+			pos += 2
+			steps++
+		} else if clouds[pos+2] == 1 {
+			// Avoid thundercloud
+			steps++
+			pos++
+		} else {
+			steps++
+			pos += 2
+		}
 	}
 
-	var totalCount uint64
-	totalCount = completeRepeats * countOfA
-
-	incompleteRepeatLength := n % lenOfWord
-	if incompleteRepeatLength != 0 {
-		wordToRepeat = wordToRepeat[:incompleteRepeatLength]
-		totalCount += uint64(strings.Count(wordToRepeat, "a"))
-	}
-
-	return totalCount
+	return steps
 }
 
 func main() {
@@ -43,9 +48,9 @@ func main() {
 			}
 			fmt.Printf("File: %s\n", fn)
 		}
-		wordToRepeat := nextWord(scanner)
-		n := nextUInt64(scanner)
-		fmt.Printf("%d\n", runTest(wordToRepeat, n, opened))
+		cloudCount := nextInt(scanner)
+		clouds := nextIntArray(scanner, cloudCount)
+		fmt.Printf("%d\n", runTest(clouds, opened))
 		if !opened {
 			return
 		}
