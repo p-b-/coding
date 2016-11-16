@@ -51,7 +51,7 @@ func runTest(line1 string, line2 string, log bool) int {
 }
 
 func main() {
-	filenames := []string{"T1.txt"}
+	filenames := []string{"T2.txt"}
 	for fi, fn := range filenames {
 		f, opened, scanner := openFile(fn)
 

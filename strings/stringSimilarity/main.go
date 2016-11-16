@@ -10,7 +10,7 @@ import (
 // https://www.hackerrank.com/challenges/string-similarity
 
 func runTest(testLine string, log bool) int64 {
-	//	log = false
+	log = false
 
 	//	r := createLCSRow(testLine)
 	fmt.Printf("Line: %s\n", testLine)
