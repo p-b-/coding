@@ -1,0 +1,10 @@
+allocating 10 million queue nodes
+
+t4 40ms
+t3 24.3s, 26.5s, 28.6s
+
+only adding to queue once
+t3 24.2s, 25.5s, 26.3s
+
+map of edges not slice
+t3 1.8s, 1.9s,2.0s
