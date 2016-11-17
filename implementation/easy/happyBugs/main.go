@@ -11,6 +11,11 @@ import (
 
 // https://www.hackerrank.com/challenges/happy-ladybugs
 
+const (
+	yesStr = "YES"
+	noStr  = "NO"
+)
+
 func freqCount(r []rune, log bool) []int {
 	var freq = make([]int, 27, 27)
 
@@ -25,9 +30,38 @@ func freqCount(r []rune, log bool) []int {
 	return freq
 }
 
+// happyBugString checks a completely full string - no space for bugs to move
+func happyBugString(r []rune, log bool) bool {
+	if len(r) == 1 {
+		// only one bug is unhappy
+		return false
+	}
+	lastElementIndex := len(r) - 1
+	if r[0] != r[1] {
+		// First bug must match next bug to be happy
+		return false
+	}
+	for index := 1; index <= lastElementIndex; index++ {
+		if r[index] == r[index-1] {
+			continue
+		}
+		if index == lastElementIndex {
+			return false
+		}
+		if r[index] != r[index+1] {
+			return false
+		}
+	}
+	return true
+}
+
 func runTest(placeCount int, layout string, log bool) string {
 	if log {
 		fmt.Printf("%d %s\n", placeCount, layout)
+	}
+	if placeCount == 0 {
+		// No unhappy ladybugs
+		return yesStr
 	}
 
 	fc := freqCount([]rune(layout), log)
@@ -35,9 +69,11 @@ func runTest(placeCount int, layout string, log bool) string {
 	for index, c := range fc {
 		// 26 is for _
 		if index < 26 && c == 1 {
-			fmt.Printf("Char %d count %d - returning no\n", index, c)
+			if log {
+				fmt.Printf("Char %d count %d - returning no\n", index, c)
+			}
 			// unhappy bug
-			return "NO"
+			return noStr
 		}
 	}
 
@@ -46,9 +82,12 @@ func runTest(placeCount int, layout string, log bool) string {
 			fmt.Printf("No space to move, check string\n")
 		}
 		// Ensure layout is happy
+		if happyBugString([]rune(layout), log) {
+			return yesStr
+		}
+		return noStr
 	}
-	//	fmt.Printf("%v\n", fc)
-	return "YES"
+	return yesStr
 }
 
 func main() {

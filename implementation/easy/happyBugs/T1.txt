@@ -1,4 +1,4 @@
-6
+7
 7
 RBY_YBR
 6
@@ -11,6 +11,8 @@ B_RRBR
 BRBRBR
 7
 BBRRBBB
+1
+B
 
 output:
 YES
