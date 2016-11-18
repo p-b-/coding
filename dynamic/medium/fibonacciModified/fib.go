@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+// https://www.hackerrank.com/challenges/fibonacci-modified
+
 var seq map[int]*big.Int
 
 func calculateSequenceAt(n int) *big.Int {
