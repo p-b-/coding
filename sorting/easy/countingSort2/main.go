@@ -9,85 +9,26 @@ import (
 	"time"
 )
 
-// https://www.hackerrank.com/challenges/happy-ladybugs
+// https://www.hackerrank.com/challenges/countingsort2
 
-const (
-	yesStr = "YES"
-	noStr  = "NO"
-)
+func runTest(elements []int, debug bool) {
+	if debug {
+		fmt.Printf("Elements %v\n", elements)
+	}
+	freq := make(map[int]int)
 
-func freqCount(r []rune, log bool) []int {
-	var freq = make([]int, 27, 27)
-
-	for _, r := range r {
-		if r == '_' {
-			freq[26]++
-		} else {
-			var letter = int(r - 'A')
-			freq[letter]++
-		}
-	}
-	return freq
-}
-
-// happyBugString checks a completely full string - no space for bugs to move
-func happyBugString(r []rune, log bool) bool {
-	if len(r) == 1 {
-		// only one bug is unhappy
-		return false
-	}
-	lastElementIndex := len(r) - 1
-	if r[0] != r[1] {
-		// First bug must match next bug to be happy
-		return false
-	}
-	for index := 1; index <= lastElementIndex; index++ {
-		if r[index] == r[index-1] {
-			continue
-		}
-		if index == lastElementIndex {
-			return false
-		}
-		if r[index] != r[index+1] {
-			return false
-		}
-	}
-	return true
-}
-
-func runTest(placeCount int, layout string, log bool) string {
-	if log {
-		fmt.Printf("%d %s\n", placeCount, layout)
-	}
-	if placeCount == 0 {
-		// No unhappy ladybugs
-		return yesStr
+	for _, e := range elements {
+		freq[e]++
 	}
 
-	fc := freqCount([]rune(layout), log)
-
-	for index, c := range fc {
-		// 26 is for _
-		if index < 26 && c == 1 {
-			if log {
-				fmt.Printf("Char %d count %d - returning no\n", index, c)
+	for i := 0; i < 100; i++ {
+		if freq[i] > 0 {
+			for j := 0; j < freq[i]; j++ {
+				fmt.Printf("%d ", i)
 			}
-			// unhappy bug
-			return noStr
 		}
 	}
-
-	if fc[26] == 0 {
-		if log {
-			fmt.Printf("No space to move, check string\n")
-		}
-		// Ensure layout is happy
-		if happyBugString([]rune(layout), log) {
-			return yesStr
-		}
-		return noStr
-	}
-	return yesStr
+	fmt.Println()
 }
 
 func main() {
@@ -106,13 +47,11 @@ func main() {
 		if opened {
 			start = time.Now()
 		}
-		testCount := nextInt(scanner)
-		for testIndex := 0; testIndex < testCount; testIndex++ {
-			placeCount := nextInt(scanner)
-			layout := nextWord(scanner)
-			fmt.Printf("%s\n", runTest(placeCount, layout, opened))
-		}
-		//}
+
+		elementCount := nextInt(scanner)
+		elements := nextIntArray(scanner, elementCount)
+		runTest(elements, opened)
+
 		if opened {
 			elapsed := time.Since(start)
 			log.Printf("Test took: %s\n", elapsed)
