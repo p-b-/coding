@@ -1,42 +1,72 @@
 package main
 
- // https://www.hackerrank.com/contests/w26/challenges/best-divisor
+// https://www.hackerrank.com/contests/w26/challenges/best-divisor
 import (
 	"bufio"
 	"fmt"
 	"log"
+	"math"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 )
+
+var divisors map[int]bool
+var processedDivisors map[int]int
+var sortedOrder []int
 
 func runTest(n int, debug bool) int {
 	if debug {
 		fmt.Printf("n: %d\n", n)
 	}
-  if n==1 {
-    return 1
-  } else if n==2 {
-    return 2
-  }
-	if m == 0 || n == 0 {
-		return 0
-	}
-	x := m / 2
-	y := n / 2
+	var bestDivisor int
 
-	if m%2 != 0 {
-		x++
-	}
-	if n%2 != 0 {
-		y++
+	createDivisors(n)
+	if debug {
+		for d := range divisors {
+			fmt.Printf("Divisor: %d\n", d)
+		}
 	}
 
-	return x * y
+	sort.Ints(processedDivisors)
+
+	processDivisors()
+
+	return bestDivisor
+}
+
+func createDivisors(n int) {
+	sqrtN := int(math.Ceil(math.Sqrt(float64(n))))
+	divisors = make(map[int]bool, sqrtN)
+
+	for d := 1; d <= sqrtN; d++ {
+		if (n % d) == 0 {
+			if _, ok := divisors[d]; !ok {
+				divisors[d] = true
+				divisors[n/d] = true
+			}
+		}
+	}
+}
+
+func processDivisors() {
+	processedDivisors = make(map[int]int)
+	for d := range divisors {
+		s := fmt.Sprintf("%d", d)
+		r := []rune(s)
+		var val int
+		for _, relement := range r {
+			var n = int(relement - '0')
+			val += n
+		}
+		processedDivisors[d] = val
+	}
+
 }
 
 func main() {
-	filenames := []string{"T1.txt" }
+	filenames := []string{"T1.txt"}
 	var start time.Time
 	for fi, fn := range filenames {
 		f, fileOpened, scanner := openFile(fn)
@@ -53,7 +83,7 @@ func main() {
 		}
 
 		n := nextInt(scanner)
-		fmt.Printf("%d\n", runTest n, fileOpened))
+		fmt.Printf("%d\n", runTest(n, fileOpened))
 		if fileOpened {
 			elapsed := time.Since(start)
 			log.Printf("Test took: %s\n", elapsed)
